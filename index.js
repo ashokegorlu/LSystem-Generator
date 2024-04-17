@@ -1,5 +1,17 @@
 class LSystem {
   constructor(axiom, rules) {
+    if (typeof axiom !== "string" || axiom.length === 0) {
+      throw new Error("Axiom must be a non-empty string.");
+    }
+
+    if (
+      !rules ||
+      typeof rules !== "object" ||
+      Object.keys(rules).length === 0
+    ) {
+      throw new Error("Rules must be a non-empty object.");
+    }
+
     this.axiom = axiom;
     this.rules = rules;
     this.memo = {};
@@ -23,6 +35,10 @@ class LSystem {
   }
 
   produce(iterations) {
+    if (!Number.isInteger(iterations) || iterations < 0) {
+      throw new Error("Iterations must be a non-negative integer.");
+    }
+
     if (this.memo[iterations]) {
       return this.memo[iterations];
     }
@@ -41,13 +57,17 @@ class LSystem {
   }
 }
 
-// Test case for Cantor fractal (n=3)
+// Example usage:
 const axiom = "A";
 const rules = {
   A: "ABA",
   B: "BBB",
 };
 
-const lSystem = new LSystem(axiom, rules);
-const result = lSystem.produce(2);
-console.log(result); // Output: ABAABABABBBBABBBBABABBBBABBBB
+try {
+  const lSystem = new LSystem(axiom, rules);
+  const result = lSystem.produce(3);
+  console.log("Result:", result);
+} catch (error) {
+  console.error("Error:", error.message);
+}
